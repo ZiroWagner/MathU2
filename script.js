@@ -2,7 +2,10 @@
 let coefficients = [];
 let chart; // Variable global para almacenar la referencia al gráfico
 
-let xValues=[], yValues=[], method;
+let xValues = [];
+let yValues = [];
+let method;
+
 
 document.getElementById('calculate-btn').addEventListener('click', function() {
     // Convertir los strings de entrada en arrays de números
@@ -132,7 +135,9 @@ document.getElementById('find-x-btn').addEventListener('click', function() {
 
     let resultX = null;
     if (method === 'vandermonde') {
-        resultX = findXWithBisection(fxInput, xMin, xMax, evaluatePolynomial);
+        resultX = findXWithBisection(fxInput, xMin, xMax, function(x) {
+            return evaluatePolynomial(x, coefficients); // Pasamos los coeficientes
+        });
     } else if (method === 'lagrange') {
         resultX = findXWithBisection(fxInput, xMin, xMax, evaluateLagrangePolynomial);
     }
@@ -146,26 +151,24 @@ document.getElementById('find-x-btn').addEventListener('click', function() {
 });
 
 // Método de bisección para encontrar x dado f(x)
-function findXWithBisection(fx, xMin, xMax, evaluateFn) {
-    const tolerance = 1e-6; // Precisión deseada
+function findXWithBisection(fx, xMin, xMax, evaluatePoly) {
+    const tolerance = 0.00001;
     let mid;
 
-    while ((xMax - xMin) > tolerance) {
+    while ((xMax - xMin) / 2 > tolerance) {
         mid = (xMin + xMax) / 2;
-        const fMid = evaluateFn(mid) - fx;
+        const fMid = evaluatePoly(mid);
 
-        if (Math.abs(fMid) < tolerance) {
-            return mid; // Raíz encontrada
-        }
-
-        if (fMid > 0) {
-            xMax = mid;
-        } else {
+        if (Math.abs(fMid - fx) < tolerance) {
+            return mid;
+        } else if (fMid < fx) {
             xMin = mid;
+        } else {
+            xMax = mid;
         }
     }
 
-    return (xMin + xMax) / 2; // Aproximación de la raíz
+    return (xMin + xMax) / 2;
 }
 
 // Evaluar el polinomio P(x) en un valor de x
