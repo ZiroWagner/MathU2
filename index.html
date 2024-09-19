@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interpolación Polinómica</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Agregar Chart.js -->
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+
+</head>
+<body>
+    <div class="container">
+        <div>
+            <h1>Interpolación Polinómica</h1>
+
+            <!-- Nueva opción para seleccionar el método -->
+            <div class="input-group">
+                <label for="method-select">Selecciona el método:</label>
+                <select id="method-select">
+                    <option value="vandermonde">Matriz de Vandermonde</option>
+                    <option value="lagrange">Fórmula de Lagrange</option>
+                </select>
+            </div>
+        
+            <!-- Formulario para ingresar los puntos -->
+            <form id="points-form">
+            <div class="input-group">
+                <label for="x-values">Valores de X (separados por comas):</label>
+                <input type="text" id="x-values" placeholder="Ej: 1.6, 2, 2.5, 3.2, 4, 4.5">
+            </div>
+            
+            <div class="input-group">
+                <label for="y-values">Valores de Y (separados por comas):</label>
+                <input type="text" id="y-values" placeholder="Ej: 2, 8, 14, 15, 8, 2">
+            </div>
+
+            <button type="button" id="calculate-btn">Calcular Polinomio</button>
+            </form>
+        
+            <h2>Polinomio Interpolante:</h2>
+            <p id="polynomial-result">\( P(x) = \)</p>
+            
+            <!-- Input para ingresar el valor de x -->
+            <div class="input-group">
+                <label for="input-x">Ingresa un valor de X para evaluar P(x):</label>
+                <input type="number" id="input-x" placeholder="Ingresa el valor de X">
+                <button type="button" id="evaluate-btn">Evaluar P(x)</button>
+            </div>
+        
+            <h2>Resultado de P(x):</h2>
+            <p id="px-result"></p>
+
+            <div>
+                <!-- Canvas para el gráfico -->
+                <h2>Gráfico del Polinomio:</h2>
+                <canvas id="polynomialChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
