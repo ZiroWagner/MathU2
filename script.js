@@ -2,7 +2,7 @@
 let coefficients = [];
 let chart; // Variable global para almacenar la referencia al gráfico
 
-let xValues, yValues, method;
+let xValues=[], yValues=[], method;
 
 document.getElementById('calculate-btn').addEventListener('click', function() {
     // Convertir los strings de entrada en arrays de números
@@ -122,6 +122,50 @@ const n = xValues.length;
     // Eliminar el "+" inicial sobrante
     polynomial = polynomial.replace(" + ", "");
     return polynomial;
+}
+
+// Evaluar P(x) cuando se ingresa f(x) para hallar x
+document.getElementById('find-x-btn').addEventListener('click', function() {
+    const fxInput = parseFloat(document.getElementById('input-fx').value); // Valor de f(x) ingresado
+    const xMin = Math.min(...xValues) - 1;
+    const xMax = Math.max(...xValues) + 1;
+
+    let resultX = null;
+    if (method === 'vandermonde') {
+        resultX = findXWithBisection(fxInput, xMin, xMax, evaluatePolynomial);
+    } else if (method === 'lagrange') {
+        resultX = findXWithBisection(fxInput, xMin, xMax, evaluateLagrangePolynomial);
+    }
+
+    if (resultX !== null) {
+        katex.render(`P(x) = ${fxInput}, \\text{ entonces } x \\approx ${resultX.toFixed(4)}`, document.getElementById('fx-result'));
+        plotPolynomial(xValues, yValues, resultX, fxInput);
+    } else {
+        document.getElementById('fx-result').textContent = "No se encontró una solución en el rango dado.";
+    }
+});
+
+// Método de bisección para encontrar x dado f(x)
+function findXWithBisection(fx, xMin, xMax, evaluateFn) {
+    const tolerance = 1e-6; // Precisión deseada
+    let mid;
+
+    while ((xMax - xMin) > tolerance) {
+        mid = (xMin + xMax) / 2;
+        const fMid = evaluateFn(mid) - fx;
+
+        if (Math.abs(fMid) < tolerance) {
+            return mid; // Raíz encontrada
+        }
+
+        if (fMid > 0) {
+            xMax = mid;
+        } else {
+            xMin = mid;
+        }
+    }
+
+    return (xMin + xMax) / 2; // Aproximación de la raíz
 }
 
 // Evaluar el polinomio P(x) en un valor de x
